@@ -76,16 +76,12 @@ public class RSSIActivity extends Activity {
             }
         });
 
-        //video stream
-
+        //start playing video
+        //"rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
         VideoView videoView;
-        String  videoRtspUrl="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
         videoView = (VideoView) this.findViewById(R.id.videoView);
-        videoView.setVideoPath(videoRtspUrl);
-        videoView.requestFocus();
-        videoView.start();
-
-
+        VideoThread vthread = new VideoThread(videoView, "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov");
+        vthread.run();
 
     }
 
@@ -118,6 +114,9 @@ public class RSSIActivity extends Activity {
                         Toast.LENGTH_LONG).show();
             }
         }
+
+
+
     };
 
     @Override
@@ -154,6 +153,24 @@ public class RSSIActivity extends Activity {
 
     }
     //a class that establishs a device connection
+
+    private class VideoThread extends Thread{
+            VideoView videoView;
+            String videoRtspUrl;
+        public VideoThread( VideoView videoView, String url){
+            //video stream
+
+            videoRtspUrl=url;
+            this.videoView = videoView;
+            videoView.setVideoPath(videoRtspUrl);
+
+
+        }
+        public void run(){
+            videoView.requestFocus();
+            videoView.start();
+        }
+    }
 
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
